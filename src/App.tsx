@@ -1,8 +1,18 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from "react";
 import {
-  AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
-} from 'recharts'
-import xtsLogo from '@/imports/XTS_logo_Red-2.png'
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import xtsLogo from "@/imports/XTS_logo_Red-2.png";
+import { testSupabaseConnection } from "./lib/testSupabase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Role = 'Owner' | 'Sales' | 'Warehouse' | 'Marketing'
@@ -1150,6 +1160,10 @@ function CustomizePanel({ onClose }: { onClose: () => void }) {
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
+  useEffect(() => {
+    testSupabaseConnection()
+  }, [])
+
   const [role, setRole] = useState<Role>('Owner')
   const [customizing, setCustomizing] = useState(false)
 
@@ -1161,30 +1175,39 @@ export default function App() {
   }
 
   const greetingMap: Record<Role, string> = {
-    Owner: "Here is what needs your attention today.",
-    Sales: "Which customers and orders need action today?",
-    Warehouse: "What needs to leave the building next?",
-    Marketing: "What product, website, or marketing information needs attention?",
+    Owner: 'Here is what needs your attention today.',
+    Sales: 'Which customers and orders need action today?',
+    Warehouse: 'What needs to leave the building next?',
+    Marketing: 'What product, website, or marketing information needs attention?',
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div
+      className="flex h-screen overflow-hidden"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
       <Sidebar currentRole={role} />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <Header role={role} setRole={setRole} />
 
-        <main className="flex-1 overflow-y-auto scrollbar-hidden p-6" style={{ backgroundColor: 'var(--bg-page)' }}>
+        <main
+          className="flex-1 overflow-y-auto scrollbar-hidden p-6"
+          style={{ backgroundColor: 'var(--bg-page)' }}
+        >
           <DashboardHeader
             role={role}
             setRole={setRole}
             onCustomize={() => setCustomizing(true)}
           />
+
           {dashboardMap[role]}
         </main>
       </div>
 
-      {customizing && <CustomizePanel onClose={() => setCustomizing(false)} />}
+      {customizing && (
+        <CustomizePanel onClose={() => setCustomizing(false)} />
+      )}
     </div>
   )
 }
