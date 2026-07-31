@@ -12,7 +12,7 @@ import {
   Legend,
 } from "recharts";
 import xtsLogo from "@/imports/XTS_logo_Red-2.png";
-import { testSupabaseConnection } from "./lib/testSupabase";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Role = 'Owner' | 'Sales' | 'Warehouse' | 'Marketing'
@@ -414,7 +414,7 @@ function Header({ role, setRole }: { role: Role; setRole: (r: Role) => void }) {
 
 // ─── Dashboard Header ─────────────────────────────────────────────────────────
 function DashboardHeader({ role, setRole, onCustomize }: {
-  role: Role; setRole: (r: Role) => void; onCustomize: () => void
+  role: Role; setRole:  (r: Role) => void; onCustomize: () => void
 }) {
   const [dateRange, setDateRange] = useState('Last 30 days')
   const dateOptions = ['Today', 'Last 7 days', 'Last 30 days', 'Last Quarter', 'Year to Date']
@@ -1160,9 +1160,6 @@ function CustomizePanel({ onClose }: { onClose: () => void }) {
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
-  useEffect(() => {
-    testSupabaseConnection()
-  }, [])
 
   const [role, setRole] = useState<Role>('Owner')
   const [customizing, setCustomizing] = useState(false)
@@ -1172,13 +1169,6 @@ export default function App() {
     Sales: <SalesDashboard />,
     Warehouse: <WarehouseDashboard />,
     Marketing: <MarketingDashboard />,
-  }
-
-  const greetingMap: Record<Role, string> = {
-    Owner: 'Here is what needs your attention today.',
-    Sales: 'Which customers and orders need action today?',
-    Warehouse: 'What needs to leave the building next?',
-    Marketing: 'What product, website, or marketing information needs attention?',
   }
 
   return (
